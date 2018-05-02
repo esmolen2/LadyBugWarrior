@@ -54,6 +54,13 @@ Enemy.prototype.stop = function() {
     });
 };
 
+// Reset enemy
+Enemy.prototype.reset = function() {
+    this.speed = this.speedSet();
+    this.x = this.xStart();
+    this.y = this.yStart();
+};
+
 // Player to be controlled
 class Player {
     constructor() {
@@ -187,7 +194,7 @@ function moveCounter() {
     movesDisplay.innerHTML = moves;
 }
 
-function clearMoves() {
+function resetMoves() {
     moves = 0;
     movesDisplay.innerHTML = moves;
 }
@@ -219,3 +226,18 @@ function resetWins() {
     wins = 0;
     winsDisplay.innerHTML = wins;
 }
+
+// Restart game button
+const restart = document.querySelector('.restart');
+
+const restartGame = function() {
+    resetMoves();
+    resetLives();
+    resetWins();
+    player.reset();
+    allEnemies.forEach(function(enemy) {
+        enemy.reset();
+    });
+}
+
+restart.addEventListener('click', restartGame);
