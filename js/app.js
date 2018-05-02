@@ -1,3 +1,9 @@
+// Global variables
+const movesDisplay = document.querySelector('.moves');
+const lifeDisplay = document.querySelector('.lives');
+const winsDisplay = document.querySelector('.wins');
+const restart = document.querySelector('.restart');
+
 // Enemies our player must avoid
 const Enemy = function() {
     // The image/sprite for our enemies, this uses a helper we've provided to easily load images
@@ -74,6 +80,15 @@ class Player {
       this.yStart = 400;
       this.x = this.xStart;
       this.y = this.yStart;
+
+      // Count the player's moves
+      this.moves = 0;
+
+      // Count the player's lives
+      this.lives = 3;
+
+      // Count the player's wins
+      this.wins = 0;
     }
 
     // Reset the player to the starting position: middle of the bottom row of grass on the canvas
@@ -82,23 +97,56 @@ class Player {
       this.y = this.yStart;
     }
 
+    // Count the player's moves and reset when needed
+    moveCounter() {
+        this.moves += 1;
+        movesDisplay.innerHTML = this.moves;
+    }
+
+    resetMoves() {
+        this.moves = 0;
+        movesDisplay.innerHTML = this.moves;
+    }
+
+    // Count the player's lives and reset when needed
+    killLife() {
+        lifeDisplay.firstChild.remove();
+        this.lives -= 1;
+    }
+
+    resetLives() {
+        lifeDisplay.innerHTML = '<li><span class="fa fa-male"></span></li><li><span class="fa fa-male"></span></li><li><span class="fa fa-male"></span></li>';
+        this.lives = 3;
+    }
+
+    // Count the player's wins and reset when needed
+    addWin() {
+        this.wins += 1;
+        winsDisplay.innerHTML = this.wins;
+    }
+
+    resetWins() {
+        this.wins = 0;
+        winsDisplay.innerHTML = this.wins;
+    }
+
     // Move the player to the next block accordingly for each key press
     // Confine player movement to within the canvas
     // Stop player movement when all lives used up
     handleInput(key) {
-        if (lives > 0 && wins < 10) {
+        if (this.lives > 0 && this.wins < 10) {
             if (key == 'left' && this.x > 0) {
                 this.x -= 101;
-                moveCounter();
+                this.moveCounter();
             } else if (key == 'right' && this.x < 404) {
                 this.x += 101;
-                moveCounter();
+                this.moveCounter();
             } else if (key == 'up') {
                 this.y -= 83;
-                moveCounter();
+                this.moveCounter();
             } else if (key == 'down' && this.y < 400) {
                 this.y += 83;
-                moveCounter();
+                this.moveCounter();
             }
         }
     }
@@ -110,7 +158,7 @@ class Player {
         let playerBoxY = this.y + 63;
 
         // Loop through all instantiated enemies and check if any occupy the same space as the player
-        // Reset the player if they do
+        // Reset the player and remove a life if they do
         allEnemies.forEach(function(enemy) {
             // Set the actual visual start of the enemy, taking into account the image file's transparency
             let enemyBoxX = enemy.x + 1;
@@ -121,11 +169,11 @@ class Player {
                 playerBoxX + player.spriteWidth > enemyBoxX &&  // check right side of player vs. left side of enemy
                 playerBoxY < enemyBoxY + enemy.spriteHeight &&  // check top side of player vs. bottom side of enemy
                 player.spriteHeight + playerBoxY > enemyBoxY) { // check bottom side of player vs. top side of enemy
-                  if (lives > 1) {
-                      killLife();                               // if overlap and lives left, reduce life count and reset the player to start position
+                  if (player.lives > 1) {
+                      player.killLife();                               // if overlap and lives left, reduce life count and reset the player to start position
                       player.reset();
                   } else {
-                      killLife();                               // if overlap and no lives left, reduce life count and end game
+                      player.killLife();                               // if overlap and no lives left, reduce life count and end game
                       player.reset();
                       allEnemies.forEach(function(enemy) {
                           enemy.stop();
@@ -139,12 +187,12 @@ class Player {
     // Update the player's position
     update() {
       // If the player hits the water, reset to starting position
-      if (this.y < 45 && wins < 9) {
-          addWin();
-          player.reset();
-      } else if (this.y < 45 && wins === 9){
-          addWin();
-          player.reset();
+      if (this.y < 45 && this.wins < 9) {
+          this.addWin();
+          this.reset();
+      } else if (this.y < 45 && this.wins === 9){
+          this.addWin();
+          this.reset();
           allEnemies.forEach(function(enemy) {
               enemy.stop();
           });
@@ -185,55 +233,11 @@ document.addEventListener('keyup', function(e) {
     player.handleInput(allowedKeys[e.keyCode]);
 });
 
-// Control move counter
-let moves = 0;
-const movesDisplay = document.querySelector('.moves');
-
-function moveCounter() {
-    moves += 1;
-    movesDisplay.innerHTML = moves;
-}
-
-function resetMoves() {
-    moves = 0;
-    movesDisplay.innerHTML = moves;
-}
-
-// Control life counter
-let lives = 3;
-const lifeDisplay = document.querySelector('.lives');
-
-function killLife() {
-    lifeDisplay.firstChild.remove();
-    lives -= 1;
-}
-
-function resetLives() {
-    lifeDisplay.innerHTML = '<li><span class="fa fa-male"></span></li><li><span class="fa fa-male"></span></li><li><span class="fa fa-male"></span></li>';
-    lives = 3;
-}
-
-// Control wins counter
-let wins = 0;
-const winsDisplay = document.querySelector('.wins');
-
-function addWin() {
-    wins += 1;
-    winsDisplay.innerHTML = wins;
-}
-
-function resetWins() {
-    wins = 0;
-    winsDisplay.innerHTML = wins;
-}
-
 // Restart game button
-const restart = document.querySelector('.restart');
-
 const restartGame = function() {
-    resetMoves();
-    resetLives();
-    resetWins();
+    player.resetMoves();
+    player.resetLives();
+    player.resetWins();
     player.reset();
     allEnemies.forEach(function(enemy) {
         enemy.reset();
@@ -241,3 +245,45 @@ const restartGame = function() {
 }
 
 restart.addEventListener('click', restartGame);
+
+// Control move counter
+// let moves = 0;
+// const movesDisplay = document.querySelector('.moves');
+
+// function moveCounter() {
+//     moves += 1;
+//     movesDisplay.innerHTML = moves;
+// }
+//
+// function resetMoves() {
+//     moves = 0;
+//     movesDisplay.innerHTML = moves;
+// }
+
+// Control life counter
+// let lives = 3;
+// const lifeDisplay = document.querySelector('.lives');
+
+// function killLife() {
+//     lifeDisplay.firstChild.remove();
+//     lives -= 1;
+// }
+//
+// function resetLives() {
+//     lifeDisplay.innerHTML = '<li><span class="fa fa-male"></span></li><li><span class="fa fa-male"></span></li><li><span class="fa fa-male"></span></li>';
+//     lives = 3;
+// }
+
+// Control wins counter
+// let wins = 0;
+// const winsDisplay = document.querySelector('.wins');
+
+// function addWin() {
+//     wins += 1;
+//     winsDisplay.innerHTML = wins;
+// }
+//
+// function resetWins() {
+//     wins = 0;
+//     winsDisplay.innerHTML = wins;
+// }
