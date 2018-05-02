@@ -1,3 +1,38 @@
 body {
     text-align: center;
+    font: normal 14px sans-serif;
+}
+
+h1 {
+    font: normal 40px Monoton, sans-serif;
+    color: #C33618;
+    margin: 0;
+}
+
+.score-panel {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-end;
+  width: 50%;
+  max-width: 500px;
+  min-width: 300px;
+  margin: 5px auto -30px;
+}
+
+.score-panel p {
+  margin: 0 5px;
+  padding: 0;
+}
+
+.lives {
+  list-style-type: none;
+  margin: 0 5px;
+  padding: 0;
+  color: #C33618;
+  font-size: 20px;
+}
+
+.lives li {
+  display: inline-block;
 }

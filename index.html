@@ -4,8 +4,30 @@
     <meta charset="UTF-8">
     <title>Effective JavaScript: Frogger</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet prefetch" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Monoton">
 </head>
 <body>
+    <header>
+      <h1>Lady Bug Warrior</h1>
+
+      <section class="score-panel">
+        <p><span class="moves">0</span> Moves</p>
+
+        <ul class="lives">
+          <li><span class="fa fa-male"></span></li>
+          <li><span class="fa fa-male"></span></li>
+          <li><span class="fa fa-male"></span></li>
+        </ul>
+
+        <p><span class="moves">0</span> Wins</p>
+
+        <div class="restart">
+          <span class="fa fa-repeat"></span>
+        </div>
+      </section>
+    </header>
+
     <script src="js/resources.js"></script>
     <script src="js/app.js"></script>
     <script src="js/engine.js"></script>
