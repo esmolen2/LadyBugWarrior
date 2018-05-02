@@ -6,7 +6,7 @@ Follow this [link](https://esmolen2.github.io/LadyBugWarrior/)!
 
 OR
 
-1. [Download](https://github.com/esmolen2/frontend-nanodegree-arcade-game/archive/master.zip) or [Clone](https://github.com/esmolen2/frontend-nanodegree-arcade-game.git) the Repository.
+1. [Download](https://github.com/esmolen2/LadyBugWarrior/archive/master.zip) or [Clone](https://github.com/esmolen2/LadyBugWarrior.git) the Repository.
 2. Open `index.html` file to view the game in your browser.
 
 ### Playing the Game
