@@ -71,15 +71,20 @@ class Player {
     }
 
     // Move the player to the next block accordingly for each key press
+    // Confine player movement to within the canvas
     handleInput(key) {
-        if (key == 'left') {
+        if (key == 'left' && this.x > 0) {
             this.x -= 101;
-        } else if (key == 'right') {
+            moveCounter();
+        } else if (key == 'right' && this.x < 404) {
             this.x += 101;
+            moveCounter();
         } else if (key == 'up') {
             this.y -= 83;
-        } else if (key == 'down') {
+            moveCounter();
+        } else if (key == 'down' && this.y < 400) {
             this.y += 83;
+            moveCounter();
         }
     }
 
@@ -107,25 +112,9 @@ class Player {
     }
     // Update the player's position
     update() {
-      // Horizontally bind the player inside the canvas
-      this.xMin = 0;
-      this.xMax = 404;
-      if (this.x < this.xMin) {
-          this.x = this.xMin;
-      };
-      if (this.x > this.xMax) {
-          this.x = this.xMax;
-      };
-
-      // Vertically bind the player within the grass and cement blocks
       // If the player hits the water, reset to starting position
-      this.yMin = 45;
-      this.yMax = 400;
-      if (this.y < this.yMin) {
-          player.reset();
-      };
-      if (this.y > this.yMax) {
-          this.y = this.yMax;
+      if (this.y < 45) {
+        player.reset();
       };
 
       // Check if the player and enemy overlap at all
@@ -162,3 +151,18 @@ document.addEventListener('keyup', function(e) {
 
     player.handleInput(allowedKeys[e.keyCode]);
 });
+
+// Control move counter
+
+let moves = 0;
+const movesDisplay = document.querySelector('.moves');
+
+function moveCounter() {
+    moves += 1;
+    movesDisplay.innerHTML = moves;
+}
+
+function clearMoves() {
+    moves = 0;
+    movesDisplay.innerHTML = moves;
+}
