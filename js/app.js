@@ -43,8 +43,8 @@ Enemy.prototype.update = function(dt) {
     if (this.x < 600) {                       // If enemy is on screen,
         this.x = this.x + (this.speed * dt);  // move enemy according to its speed.
     } else {                                  // If enemy is off screen to the right,
-        this.x = this.xStart();               // restart its position to the left side and
-        this.y = this.yStart();
+        this.x = this.xStart();               // restart its position to the left side,
+        this.y = this.yStart();               // randomly assign a row position, and
         this.speed = this.speedSet();         // randomly reset it's speed
     }
 };
@@ -133,7 +133,7 @@ class Player {
 
     // Move the player to the next block accordingly for each key press
     // Confine player movement to within the canvas
-    // Stop player movement when all lives used up
+    // Stop player movement when all lives used up or game won
     handleInput(key) {
         if (this.lives > 0 && this.wins < 10) {
             if (key == 'left' && this.x > 0) {
@@ -170,11 +170,11 @@ class Player {
                 playerBoxX + player.spriteWidth > enemyBoxX &&  // check right side of player vs. left side of enemy
                 playerBoxY < enemyBoxY + enemy.spriteHeight &&  // check top side of player vs. bottom side of enemy
                 player.spriteHeight + playerBoxY > enemyBoxY) { // check bottom side of player vs. top side of enemy
-                  if (player.lives > 1) {
-                      player.killLife();                               // if overlap and lives left, reduce life count and reset the player to start position
-                      player.reset();
-                  } else {
-                      player.killLife();                               // if overlap and no lives left, reduce life count and end game
+                  if (player.lives > 1) {                       // if overlap and lives left,
+                      player.killLife();                        // reduce life count and
+                      player.reset();                           // reset the player to start position
+                  } else {                                      // if overlap and no lives left,
+                      player.killLife();                        // reduce life count and end game
                       player.reset();
                       allEnemies.forEach(function(enemy) {
                           enemy.stop();
@@ -188,11 +188,11 @@ class Player {
 
     // Update the player's position
     update() {
-      // If the player hits the water, reset to starting position
+      // If the player hits the water, add a win and reset to starting position
       if (this.y < 45 && this.wins < 9) {
           this.addWin();
           this.reset();
-      } else if (this.y < 45 && this.wins === 9){
+      } else if (this.y < 45 && this.wins === 9){   // When player reaches the water for tenth win, end game
           this.addWin();
           this.reset();
           allEnemies.forEach(function(enemy) {
@@ -248,11 +248,13 @@ const restartGame = function() {
     });
 }
 
+// Remove the restart button upon game-ending modal appearing
 function hideRestart() {
     restart.removeEventListener('click', restartGame);
     restart.classList.add('hide');
 }
 
+// Add restart button back in once game is restarted from game-ending modal
 function showRestart() {
     restart.addEventListener('click', restartGame);
     restart.classList.remove('hide');

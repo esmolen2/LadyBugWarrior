@@ -9,6 +9,7 @@ h1 {
     margin: 0;
 }
 
+/* Score panel styles */
 .score-panel {
   display: flex;
   flex-direction: row;
@@ -50,6 +51,7 @@ h1 {
   visibility: hidden;
 }
 
+/* End game modal styles */
 .modal {
   display: none;
   width: 300px;
