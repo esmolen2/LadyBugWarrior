@@ -47,6 +47,13 @@ Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
+// Stop enemy
+Enemy.prototype.stop = function() {
+    allEnemies.forEach(function(enemy) {
+      enemy.speed = 0;
+    });
+};
+
 // Player to be controlled
 class Player {
     constructor() {
@@ -72,19 +79,22 @@ class Player {
 
     // Move the player to the next block accordingly for each key press
     // Confine player movement to within the canvas
+    // Stop player movement when all lives used up
     handleInput(key) {
-        if (key == 'left' && this.x > 0) {
-            this.x -= 101;
-            moveCounter();
-        } else if (key == 'right' && this.x < 404) {
-            this.x += 101;
-            moveCounter();
-        } else if (key == 'up') {
-            this.y -= 83;
-            moveCounter();
-        } else if (key == 'down' && this.y < 400) {
-            this.y += 83;
-            moveCounter();
+        if (lives > 0) {
+            if (key == 'left' && this.x > 0) {
+                this.x -= 101;
+                moveCounter();
+            } else if (key == 'right' && this.x < 404) {
+                this.x += 101;
+                moveCounter();
+            } else if (key == 'up') {
+                this.y -= 83;
+                moveCounter();
+            } else if (key == 'down' && this.y < 400) {
+                this.y += 83;
+                moveCounter();
+            }
         }
     }
 
@@ -106,10 +116,19 @@ class Player {
                 playerBoxX + player.spriteWidth > enemyBoxX &&  // check right side of player vs. left side of enemy
                 playerBoxY < enemyBoxY + enemy.spriteHeight &&  // check top side of player vs. bottom side of enemy
                 player.spriteHeight + playerBoxY > enemyBoxY) { // check bottom side of player vs. top side of enemy
-                  player.reset();                               // reset the player to start position if overlap
+                  if (lives > 1) {
+                      killLife();                               // if overlap and lives left, reduce life count and reset the player to start position
+                      player.reset();
+                  } else {
+                      killLife();                               // if overlap and no lives left, reduce life count and end game
+                      player.reset();
+                      enemy.stop();
+                      console.log('Game Over!');
+                  }
             }
         });
     }
+
     // Update the player's position
     update() {
       // If the player hits the water, reset to starting position
@@ -153,7 +172,6 @@ document.addEventListener('keyup', function(e) {
 });
 
 // Control move counter
-
 let moves = 0;
 const movesDisplay = document.querySelector('.moves');
 
@@ -165,4 +183,18 @@ function moveCounter() {
 function clearMoves() {
     moves = 0;
     movesDisplay.innerHTML = moves;
+}
+
+// Control life counter
+let lives = 3;
+const lifeDisplay = document.querySelector('.lives');
+
+function killLife() {
+    lifeDisplay.firstChild.remove();
+    lives -= 1;
+}
+
+function resetLives() {
+    lifeDisplay.innerHTML = '<li><span class="fa fa-male"></span></li><li><span class="fa fa-male"></span></li><li><span class="fa fa-male"></span></li>';
+    lives = 3;
 }
