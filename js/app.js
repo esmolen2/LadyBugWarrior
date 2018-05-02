@@ -49,9 +49,7 @@ Enemy.prototype.render = function() {
 
 // Stop enemy
 Enemy.prototype.stop = function() {
-    allEnemies.forEach(function(enemy) {
-      enemy.speed = 0;
-    });
+    this.speed = 0;
 };
 
 // Reset enemy
@@ -129,7 +127,9 @@ class Player {
                   } else {
                       killLife();                               // if overlap and no lives left, reduce life count and end game
                       player.reset();
-                      enemy.stop();
+                      allEnemies.forEach(function(enemy) {
+                          enemy.stop();
+                      });
                       console.log('Game Over!');
                   }
             }
