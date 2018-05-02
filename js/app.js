@@ -3,6 +3,7 @@ const movesDisplay = document.querySelector('.moves');
 const lifeDisplay = document.querySelector('.lives');
 const winsDisplay = document.querySelector('.wins');
 const restart = document.querySelector('.restart');
+const playAgain = document.querySelector('.play-again');
 
 // Enemies our player must avoid
 const Enemy = function() {
@@ -178,7 +179,8 @@ class Player {
                       allEnemies.forEach(function(enemy) {
                           enemy.stop();
                       });
-                      console.log('Game Over!');
+                      hideRestart();
+                      showLoseModal();
                   }
             }
         });
@@ -196,6 +198,8 @@ class Player {
           allEnemies.forEach(function(enemy) {
               enemy.stop();
           });
+          hideRestart();
+          showWinModal();
       };
 
       // Check if the player and enemy overlap at all
@@ -244,7 +248,44 @@ const restartGame = function() {
     });
 }
 
+function hideRestart() {
+    restart.removeEventListener('click', restartGame);
+    restart.classList.add('hide');
+}
+
+function showRestart() {
+    restart.addEventListener('click', restartGame);
+    restart.classList.remove('hide');
+}
+
+// Game-ending modal control
+const endModal = document.getElementById('modal-screen');
+const modalHeading = endModal.querySelector('.modal-heading');
+const modalText = endModal.querySelector('.modal-text');
+
+function showWinModal() {
+    modalHeading.innerHTML = 'You Win!';
+    modalText.innerHTML = 'Congrats, you won in ' + player.moves +' moves!';
+    endModal.classList.add('flex');
+}
+
+function showLoseModal() {
+    modalHeading.innerHTML = 'Game Over';
+    modalText.innerHTML = 'You lose.';
+    endModal.classList.add('flex');
+}
+
+function hideModal() {
+    endModal.classList.remove('flex');
+}
+
+// Event Listeners
 restart.addEventListener('click', restartGame);
+playAgain.addEventListener('click', function() {
+    restartGame();
+    hideModal();
+    showRestart();
+});
 
 // Original Moves, Lives, and Wins counter code. Moved into Player class
 
