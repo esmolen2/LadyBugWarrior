@@ -246,6 +246,8 @@ const restartGame = function() {
 
 restart.addEventListener('click', restartGame);
 
+// Original Moves, Lives, and Wins counter code. Moved into Player class
+
 // Control move counter
 // let moves = 0;
 // const movesDisplay = document.querySelector('.moves');
