@@ -81,7 +81,7 @@ class Player {
     // Confine player movement to within the canvas
     // Stop player movement when all lives used up
     handleInput(key) {
-        if (lives > 0) {
+        if (lives > 0 && wins < 10) {
             if (key == 'left' && this.x > 0) {
                 this.x -= 101;
                 moveCounter();
@@ -132,8 +132,15 @@ class Player {
     // Update the player's position
     update() {
       // If the player hits the water, reset to starting position
-      if (this.y < 45) {
-        player.reset();
+      if (this.y < 45 && wins < 9) {
+          addWin();
+          player.reset();
+      } else if (this.y < 45 && wins === 9){
+          addWin();
+          player.reset();
+          allEnemies.forEach(function(enemy) {
+              enemy.stop();
+          });
       };
 
       // Check if the player and enemy overlap at all
@@ -197,4 +204,18 @@ function killLife() {
 function resetLives() {
     lifeDisplay.innerHTML = '<li><span class="fa fa-male"></span></li><li><span class="fa fa-male"></span></li><li><span class="fa fa-male"></span></li>';
     lives = 3;
+}
+
+// Control wins counter
+let wins = 0;
+const winsDisplay = document.querySelector('.wins');
+
+function addWin() {
+    wins += 1;
+    winsDisplay.innerHTML = wins;
+}
+
+function resetWins() {
+    wins = 0;
+    winsDisplay.innerHTML = wins;
 }
